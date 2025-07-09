@@ -648,7 +648,7 @@
       chatbox.scrollTop = chatbox.scrollHeight;
 
       // Make API call to backend
-      fetch("http://localhost:5000/get_answer", {
+      fetch(" https://aichatbotbackend-g0mu.onrender.com", {
         method: "POST",
         body: JSON.stringify({ question: userInput }),
         headers: { "Content-Type": "application/json" }
