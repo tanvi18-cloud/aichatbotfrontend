@@ -626,70 +626,71 @@
 
   <!-- Chatbot JavaScript -->
   <script>
-    function sendQuery() {
-      const userInputField = document.getElementById("userInput");
-      const userInput = userInputField.value.trim();
+  function sendQuery() {
+    const userInputField = document.getElementById("userInput");
+    const userInput = userInputField.value.trim();
 
-      if (userInput === "") {
-        return;
-      }
-
-      // Add user message to chat
-      const chatbox = document.getElementById("chatbox");
-      chatbox.innerHTML += `<p><b>You:</b> ${userInput}</p>`;
-
-      // Clear input and scroll to bottom
-      userInputField.value = "";
-      chatbox.scrollTop = chatbox.scrollHeight;
-
-      // Show typing indicator
-      chatbox.innerHTML += `<p id="typing"><b>Bot:</b> Typing...</p>`;
-      chatbox.scrollTop = chatbox.scrollHeight;
-
-      // Make API call to backend
-      fetch(" https://aichatbotbackend-g0mu.onrender.com", {
-        method: "POST",
-        body: JSON.stringify({ question: userInput }),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Remove typing indicator
-        document.getElementById("typing").remove();
-        
-        // Add bot response
-        chatbox.innerHTML += `<p><b>Bot:</b> ${data.answer}</p>`;
-        chatbox.scrollTop = chatbox.scrollHeight;
-      })
-      .catch(error => {
-        // Remove typing indicator
-        document.getElementById("typing").remove();
-        
-        console.error("Error:", error);
-        chatbox.innerHTML += `<p><b>Bot:</b> Sorry, I'm having trouble connecting right now. Please try again later.</p>`;
-        chatbox.scrollTop = chatbox.scrollHeight;
-      });
+    if (userInput === "") {
+      return;
     }
 
-    // Handle Enter key press
-    document.getElementById("userInput").addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendQuery();
-      }
+    // Add user message to chat
+    const chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML += `<p><b>You:</b> ${userInput}</p>`;
+
+    // Clear input and scroll to bottom
+    userInputField.value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    // Show typing indicator
+    chatbox.innerHTML += `<p id="typing"><b>Bot:</b> Typing...</p>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    // ✅ Corrected API call to include /get_answer
+    fetch("https://aichatbotbackend-g0mu.onrender.com/get_answer", {
+      method: "POST",
+      body: JSON.stringify({ question: userInput }),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Remove typing indicator
+      document.getElementById("typing").remove();
+      
+      // Add bot response
+      chatbox.innerHTML += `<p><b>Bot:</b> ${data.answer}</p>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+    })
+    .catch(error => {
+      // Remove typing indicator
+      document.getElementById("typing").remove();
+      
+      console.error("Error:", error);
+      chatbox.innerHTML += `<p><b>Bot:</b> Sorry, I'm having trouble connecting right now. Please try again later.</p>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
     });
+  }
 
-    // Toggle chat window
-    function toggleChat() {
-      const chatContainer = document.getElementById("chat-container");
-      if (chatContainer.style.display === "none" || !chatContainer.style.display) {
-        chatContainer.style.display = "flex";
-        document.getElementById("userInput").focus();
-      } else {
-        chatContainer.style.display = "none";
-      }
+  // Handle Enter key press
+  document.getElementById("userInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendQuery();
     }
-  </script>
+  });
+
+  // Toggle chat window
+  function toggleChat() {
+    const chatContainer = document.getElementById("chat-container");
+    if (chatContainer.style.display === "none" || !chatContainer.style.display) {
+      chatContainer.style.display = "flex";
+      document.getElementById("userInput").focus();
+    } else {
+      chatContainer.style.display = "none";
+    }
+  }
+</script>
+
 
 </body>
 
